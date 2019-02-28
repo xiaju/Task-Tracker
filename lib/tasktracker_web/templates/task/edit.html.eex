@@ -1,0 +1,2 @@
+<h1>Task <small class="text-muted"><%= @task.title %></small></h1>
+<%= render "form.html", Map.put(assigns, :action, Routes.task_path(@conn, :update, @task)) %>

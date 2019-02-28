@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TaskTracker · Phoenix Framework</title>
+    <link rel="stylesheet" href="<%= Routes.static_url(@conn, "/css/app.css") %>"/>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="navbar-brand mr-auto">
+          <%= link "Task Tracker", to: Routes.page_path(@conn, :index), class: "navbar-brand" %>
+        </div>
+        <div>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <%= link "Tasks", to: Routes.task_path(@conn, :index), class: "nav-link" %>
+            </li>
+            <li class"nav-item">
+              <%= link "Users", to: Routes.user_path(@conn, :index), class: "nav-link" %>
+            </li>
+            <li>
+            <%= if @current_user do %>
+              <div class="dropdown navbar-nav">
+                <button class="btn btn-secondary dropdown-toggle" type="button" 
+                        id="dropdownMenuButton" data-toggle="dropdown" 
+                        aria-haspopup="true" aria-expanded="false">
+                        <%= @current_user.name %>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <%= link("Profile", to: Routes.user_path(@conn, :show, @current_user),
+                    class: "dropdown-item") %>
+                  <%= link("Logout", to: Routes.session_path(@conn, :delete),
+                    method: :delete, class: "dropdown-item") %>
+                </div>
+              </div>
+            <% end %>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="row">
+        <div class="col-12">
+          <%= if get_flash(@conn, :info) do %>
+            <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+          <% end %>
+          <%= if get_flash(@conn, :error) do %>
+            <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-8">
+          <%= render @view_module, @view_template, assigns %>
+        </div>
+
+        <div class="col-4">
+          <%= if @current_user do %>
+            <p class="my-3">
+            <table class="table table-bordered">
+              <thead>Current Tasks</thead>
+              <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>View</th>
+                <th>Delete</th>
+              </tr>
+              <%= for task <- @current_tasks do %>
+                <tr>
+                  <td><%= task.title %></td>
+                  <td><%= if task.complete do %>
+                        Complete
+                      <% else %>
+                        Incomplete
+                      <% end %>
+                  </td>
+                  <td><%= link "Show", to: Routes.task_path(@conn, :show, task),
+                    class: "btn btn-link" %></td>
+                  <td><%= link "Delete", to: Routes.task_path(@conn, :delete, task),
+                    method: :delete, data: [confirm: "Are you sure?"],
+                    class: "btn btn-link" %></td>
+                </tr>
+              <% end %>
+            </table>
+          <% else %>
+            <%= form_for @conn, Routes.session_path(@conn, :create),
+              [class: "form-inline"], fn f -> %>
+              <%= text_input f, :name, class: "form-control" %>
+                <%= submit "Login", class: "btn btn-secondary" %>
+           <% end %>
+         <% end %>
+       </div>
+     </div>
+</div>
+
+    <script type="text/javascript" src="<%= Routes.static_url(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>

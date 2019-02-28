@@ -1,0 +1,36 @@
+<h1>Task <small class="text-muted"><%= @task.title %></small></h1>
+
+<ul class="list-group">
+  <li class="list-group-item">
+    <strong>Title:</strong>
+    <%= @task.title %>
+  </li>
+
+  <li class="list-group-item">
+    <strong>Desc:</strong>
+    <%= @task.desc %>
+  </li>
+
+  <li class="list-group-item">
+    <strong>Time:</strong>
+    <%= @task.time %>
+  </li>
+
+  <li class="list-group-item">
+    <strong>Status:</strong>
+    <%= if @task.complete do %>
+      Complete
+    <% else %>
+      Incomplete
+    <% end %>
+  </li>
+
+  <li class="list-group-item">
+    <strong>Assignee:</strong>
+    <%= @task.user_id %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task), class: "btn btn-info" %></span>
+<span><%= link "Back", to: Routes.task_path(@conn, :index), class: "btn btn-dark" %></span>

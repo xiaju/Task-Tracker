@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-12">
+    <h1>Welcome to Task Tracker</h1>
+    <%= if @current_user do %>
+      <h3>
+        You have 
+        <%= Enum.reduce(@current_tasks, 0, 
+                        fn task, acc -> if task.complete == false, do: acc + 1, else: acc end)
+            |> (fn count -> if count, do: count, else: 0 end).() %>
+        task/s remaining
+      </h3>
+      <%= link("Logout", to: Routes.session_path(@conn, :delete),
+      method: :delete, class: "dropdown-item", class: "btn btn-warning") %>
+    <% else %>
+      <p><%= link "Register", to: Routes.user_path(@conn, :new), class: "btn btn-info" %></p>
+    <% end %>
+  </div>
+</div>
