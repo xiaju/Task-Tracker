@@ -107,4 +107,12 @@ defmodule Tasktracker.Users do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  def underling_tasks(user_id) do
+    query = from u in User,
+      where: u.manager_id == ^user_id,
+      select: u.id
+    q = Repo.all(query)
+    Enum.reduce(q, [], fn(x, acc) -> [%{user: get_user(x).name, task: Tasktracker.Tasks.list_tasks(x)}] ++ acc end)
+  end
 end

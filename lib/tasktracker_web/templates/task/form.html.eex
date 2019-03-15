@@ -18,26 +18,21 @@
   </div>
 
   <div class="form-group">
-    <%= label f, :time %>
-    <%= number_input f, :time, class: "form-control", step: "15" %>
-    <%= error_tag f, :time %>
-  </div>
-
-  <div class="form-group">
     <%= label f, :complete %>
     <%= checkbox f, :complete %>
     <%= error_tag f, :complete %>
   </div>
 
-  <div class="form-group">
-    <%= label f, :assignee %>
-    <%= text_input f, :name, class: "form-control" %>
-    <%= error_tag f, :name %>
-  </div>
+  <%= if @current_user do %>
+    <div class="form-group">
+      <%= label f, :assignee %>
+      <%= select f, :name, [""] ++ Enum.map(@current_user.underling, fn u -> u.name end) %>
+    </div>
+  <% end %>
+
 
   <div>
     <%= submit "Save", class: "btn btn-primary" %>
     <%= link "Back", to: Routes.task_path(@conn, :index), class: "btn btn-dark" %>
   </div>
 <% end %>
-

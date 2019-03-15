@@ -12,11 +12,6 @@
   </li>
 
   <li class="list-group-item">
-    <strong>Time:</strong>
-    <%= @task.time %>
-  </li>
-
-  <li class="list-group-item">
     <strong>Status:</strong>
     <%= if @task.complete do %>
       Complete
@@ -27,7 +22,31 @@
 
   <li class="list-group-item">
     <strong>Assignee:</strong>
-    <%= @task.user_id %>
+    <%= if @task.user, do: @task.user.name %>
+  </li>
+
+  <script>
+    window.timeblock_path = "<%= Routes.time_block_path(@conn, :create) %>";
+  </script>
+
+  <li class="list-group-item">
+    <strong>Time Blocks:</strong><p>Displayed in Posix Time</p>
+    <ul>
+      <li>
+        <button id = "start-button" class="btn btn-success" data-task-id="<%=@task.id %>">Start</button>
+        <button id = "end-button" class="btn btn-danger" data-task-id="<%=@task.id %>">Stop</button>
+      </li>
+      <%= for t <- @task.timeblock do %>
+        <li>
+          <div>
+            <input type="number" id="start<%= t.id %>" value="<%= t.start %>"></input> to
+            <input type="number" id="end<%= t.id %>" value="<%= t.end %>"></input>
+            <button data-path="<%= Routes.time_block_path(@conn, :update, t.id) %>"
+             class="btn btn-info edit-timeblock" data-tb-id="<%= t.id %>">edit</button>
+          </div>
+        </li>
+      <% end %>
+    </ul>
   </li>
 
 </ul>

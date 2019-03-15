@@ -3,12 +3,44 @@
     <h1>Welcome to Task Tracker</h1>
     <%= if @current_user do %>
       <h3>
-        You have 
-        <%= Enum.reduce(@current_tasks, 0, 
+        You have
+        <%= Enum.reduce(@current_tasks, 0,
                         fn task, acc -> if task.complete == false, do: acc + 1, else: acc end)
             |> (fn count -> if count, do: count, else: 0 end).() %>
         task/s remaining
       </h3>
+      <table class="table table-bordered">
+        <thead>Underling Tasks</thead>
+        <tr>
+          <th>Underling</th>
+          <th>Title</th>
+          <th>Status</th>
+          <th>View</th>
+          <th>Delete</th>
+        </tr>
+        <%= for t <- @uling_tasks do %>
+          <%= t[:user] %>
+          <tr>
+            <%= for tk <- t[:task] do %>
+              <td><%= t[:user] %></td>
+              <%= if t[:task] do %>
+              <td><%= tk.title %></td>
+              <td><%= if tk.complete do %>
+                    Complete
+                  <% else %>
+                    Incomplete
+                  <% end %>
+              </td>
+              <td><%= link "Show", to: Routes.task_path(@conn, :show, tk),
+                class: "btn btn-link" %></td>
+              <td><%= link "Delete", to: Routes.task_path(@conn, :delete, tk),
+                method: :delete, data: [confirm: "Are you sure?"],
+                class: "btn btn-link" %></td>
+            <% end %>
+          </tr>
+          <% end %>
+        <% end %>
+      </table>
       <%= link("Logout", to: Routes.session_path(@conn, :delete),
       method: :delete, class: "dropdown-item", class: "btn btn-warning") %>
     <% else %>

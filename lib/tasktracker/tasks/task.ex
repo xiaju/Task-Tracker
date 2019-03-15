@@ -8,13 +8,14 @@ defmodule Tasktracker.Tasks.Task do
     field :time, :integer
     field :title, :string
     belongs_to :user, Tasktracker.Users.User
+    has_many :timeblock, Tasktracker.TimeBlocks.TimeBlock, foreign_key: :task_id
 
     timestamps()
   end
 
   @doc false
   def changeset(task, attrs) do
-    attrs = if attrs != nil && Map.has_key?(attrs, "name") && 
+    attrs = if attrs != nil && Map.has_key?(attrs, "name") &&
                Tasktracker.Users.get_user_by_name(attrs["name"]) do
       user = Tasktracker.Users.get_user_by_name(attrs["name"])
       Map.put(attrs, "user_id", user.id)

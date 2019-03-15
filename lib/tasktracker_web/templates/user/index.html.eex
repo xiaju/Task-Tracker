@@ -4,7 +4,7 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>ID</th>
+      <th>Manager</th>
       <th></th>
     </tr>
   </thead>
@@ -12,13 +12,13 @@
   <%= for user <- @users do %>
     <tr>
       <td><%= user.name %></td>
-      <td><%= user.id %></td>
+      <td><%= if user.manager, do: user.manager.name %></td>
       <td>
         <%= link "Show", to: Routes.user_path(@conn, :show, user),
             class: "btn btn-secondary" %>
         <%= link "Edit", to: Routes.user_path(@conn, :edit, user),
             class: "btn btn-info" %>
-        <%= link "Delete", to: Routes.user_path(@conn, :delete, user), 
+        <%= link "Delete", to: Routes.user_path(@conn, :delete, user),
             method: :delete, data: [confirm: "Are you sure?"],
             class: "btn btn-danger" %>
       </td>

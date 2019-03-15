@@ -1,11 +1,14 @@
 defmodule TasktrackerWeb.UserController do
   use TasktrackerWeb, :controller
+  alias Tasktracker.Repo
 
   alias Tasktracker.Users
   alias Tasktracker.Users.User
 
   def index(conn, _params) do
     users = Users.list_users()
+    |> Repo.preload(:underling)
+    |> Repo.preload(:manager)
     render(conn, "index.html", users: users)
   end
 
@@ -29,6 +32,8 @@ defmodule TasktrackerWeb.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Users.get_user!(id)
+    |> Repo.preload(:underling)
+    |> Repo.preload(:manager)
     render(conn, "show.html", user: user)
   end
 

@@ -1,10 +1,9 @@
-defmodule Tasktracker.Repo.Migrations.DeleteStuff do
+defmodule Tasktracker.Repo.Migrations.AddAdminField do
   use Ecto.Migration
 
   def change do
     alter table(:users) do
-      remove :task_id
+      add :admin, :boolean
     end
   end
-
 end

@@ -3,9 +3,12 @@ defmodule TasktrackerWeb.TaskController do
 
   alias Tasktracker.Tasks
   alias Tasktracker.Tasks.Task
+  alias Tasktracker.Repo
 
   def index(conn, _params) do
     tasks = Tasks.list_tasks()
+    |> Repo.preload(:timeblock)
+    |> Repo.preload(:user)
     render(conn, "index.html", tasks: tasks)
   end
 
@@ -28,6 +31,8 @@ defmodule TasktrackerWeb.TaskController do
 
   def show(conn, %{"id" => id}) do
     task = Tasks.get_task!(id)
+    |> Repo.preload(:timeblock)
+    |> Repo.preload(:user)
     render(conn, "show.html", task: task)
   end
 
